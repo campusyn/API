@@ -4,7 +4,7 @@ const app = express();
 const route = require("./src/router/route");
 const { inject } = require("@vercel/analytics");
 
-inject();  // Analitik Vercel
+inject();  
 
 app.use(cors());  // Izinkan CORS secara global
 app.use(route);   // Gunakan route dari file router
@@ -23,9 +23,6 @@ app.all('*', (req, res) => {
 // Tentukan port dan jalankan server
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
-  try {
-    console.log(`Running on localhost:${port}`);
-  } catch (error) {
-    throw error;
-  }
+  console.log(`Server running on port ${port}`);
 });
+
