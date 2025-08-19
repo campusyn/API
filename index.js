@@ -6,15 +6,23 @@ const { inject } = require("@vercel/analytics");
 
 inject();  
 
-app.use(cors());
-app.use(route);
+app.use(cors());  // Izinkan CORS secara global
+app.use(route);   // Gunakan route dari file router
 
-// Export app untuk Vercel
-module.exports = app;
-// Local development
-if (process.env.NODE_ENV !== 'production') {
-  const port = process.env.PORT || 8000;
-  app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-  });
-}
+// Penanganan error global (optional)
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
+
+// Penanganan route yang tidak dikenal
+app.all('*', (req, res) => {
+  res.status(404).json({ message: 'Not Found' });
+});
+
+// Tentukan port dan jalankan server
+const port = process.env.PORT || 8000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
