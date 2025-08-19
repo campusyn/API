@@ -3,25 +3,33 @@ const router = express.Router();
 const Services = require("../controller/services");
 const fetch = require("node-fetch");
 
-// Tambahkan ini - Default headers untuk semua fetch requests
-const defaultHeaders = {
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-    'Accept-Language': 'en-US,en;q=0.5',
-    'Accept-Encoding': 'gzip, deflate',
-    'Connection': 'keep-alive',
-    'Upgrade-Insecure-Requests': '1'
-};
+// Root endpoint info
+router.get("/", (req, res) => {
+    console.log("Root endpoint accessed");
+    res.send({
+        message: "API is running",
+        endpoint: {
+            getOngoingAnime: "/api/v1/ongoing/:page",
+            getCompletedAnime: "/api/v1/completed/:page",
+            getAnimeSearch: "/api/v1/search/:q",
+            getAnimeList: "/api/v1/anime-list",
+            getAnimeDetail: "/api/v1/detail/:endpoint",
+            getAnimeEpisode: "/api/v1/episode/:endpoint",
+            getBatchLink: "/api/v1/batch/:endpoint",
+            getGenreList: "/api/v1/genres",
+            getGenrePage: "/api/v1/genres/:genre/:page",
+            proxyImage: "/api/v1/proxy-image?url={image_url}"
+        }
+    });
+});
 
-// Update proxy-image dengan headers
+// Proxy image
 router.get("/api/v1/proxy-image", async (req, res) => {
     try {
         const imageUrl = req.query.url;
         if (!imageUrl) return res.status(400).send("Missing url param");
 
-        const response = await fetch(imageUrl, {
-            headers: defaultHeaders
-        });
+        const response = await fetch(imageUrl);
         if (!response.ok) return res.status(response.status).send("Failed to fetch image");
 
         res.set("Content-Type", response.headers.get("content-type"));
@@ -31,8 +39,6 @@ router.get("/api/v1/proxy-image", async (req, res) => {
         res.status(500).send("Internal server error");
     }
 });
-
-// ... rest of your code
 
 // API routes
 router.get("/api/v1/ongoing/:page", Services.getOngoing);

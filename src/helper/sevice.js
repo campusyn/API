@@ -4,25 +4,20 @@ const Service = {
   fetchService: async (url, res) => {
     try {
       const response = await axios.get(url, {
-        timeout: 10000,
+        timeout: 7000,
         headers: {
-          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          'Accept': 'application/json, text/plain, */*',
-          'Accept-Language': 'en-US,en;q=0.9,id;q=0.8',
-          'Accept-Encoding': 'gzip, deflate, br',
-          'Connection': 'keep-alive',
-          'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
-          'sec-ch-ua-mobile': '?0',
-          'sec-ch-ua-platform': '"Linux"',
-          'sec-fetch-dest': 'empty',
-          'sec-fetch-mode': 'cors',
-          'sec-fetch-site': 'cross-site'
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
+          'Referer': 'https://otakudesu.best/',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.9',
+          'Cache-Control': 'no-cache',
         }
       });
       return response;
     } catch (error) {
       console.error("❌ Error fetching URL:", url);
 
+      // Log more error details
       if (error.response) {
         console.error("Response error data:", error.response.data);
         console.error("Status code:", error.response.status);
@@ -34,8 +29,8 @@ const Service = {
 
       res.status(500).json({
         status: false,
-        code: error.response?.status || error.code || 500,
-        message: error.response?.data?.message || error.message || "Internal Server Error"
+        code: error.code || 500,
+        message: error.message || "Internal Server Error"
       });
       throw error;
     }
